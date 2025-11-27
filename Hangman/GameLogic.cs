@@ -2,7 +2,7 @@
 
 public class GameLogic (string word)
 {
-    public string SecretWord { get; } = word.ToUpper();
+    public string Word { get; } = word.ToUpper();
     private readonly HashSet<char> _guessedLetters = [];
     public int MaxMistakes => 10;
     public int CurrentMistakes { get; private set; }
@@ -12,7 +12,7 @@ public class GameLogic (string word)
         letter = char.ToUpper(letter);
         
         if (!_guessedLetters.Add(letter)) return GuessResult.Duplicate;
-        if (SecretWord.Contains(letter))  return GuessResult.Success;
+        if (Word.Contains(letter))  return GuessResult.Success;
         
         CurrentMistakes++;
         return GuessResult.Miss;
@@ -20,7 +20,7 @@ public class GameLogic (string word)
     
     public string GetMaskedWord()
     {
-        return string.Join(" ", SecretWord.Select(c => _guessedLetters.Contains(c) ? c : '_'));
+        return string.Join(" ", Word.Select(c => _guessedLetters.Contains(c) ? c : '_'));
     }
 
     public bool IsGameOver() 
@@ -30,6 +30,6 @@ public class GameLogic (string word)
 
     public bool IsWin()
     {
-        return SecretWord.All(_guessedLetters.Contains);
+        return Word.All(_guessedLetters.Contains);
     }
 }

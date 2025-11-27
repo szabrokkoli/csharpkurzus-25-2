@@ -1,94 +1,151 @@
-﻿using static Hangman.DisplayHelper;
+﻿namespace Hangman;
 
-namespace Hangman;
-
-public class Display
+public class Display // todo: clean it up
 {
-    public void RefreshScreen(GameLogic logic, GuessResult? lastResult = null)
+    public void ShowDifficultyMenu()
     {
-        Reset();
-        PrintDivider("HANGMAN");
-        PrintMultilineCentered(HangmanArt.DrawHangman(logic.CurrentMistakes), fixedHeight: 7);
-        VerticalSpace(2);
-        PrintDivider("Guess a letter");
-        VerticalSpace(1);
-        PrintLine(logic.GetMaskedWord(), ConsoleColor.Cyan);
-        VerticalSpace(1);
-        PrintLine($"Mistakes: {logic.CurrentMistakes}/{logic.MaxMistakes}");
-
-        if (lastResult != null)
+        RenderLayout("DIFFICULTY", "", () =>
         {
-            var (msg, color) = GetStatusMessage(lastResult.Value);
-            VerticalSpace(1);
-            Console.ForegroundColor = color;
-            PrintDivider(msg);
-            Console.ResetColor();
-        }
-        else
-        {
-            VerticalSpace(1);
-            PrintDivider("");
-        }
+            PrintCentered("1. ROOKIE");
+            PrintCentered("2. NERD");
+            PrintCentered("3. PALEONTOLOGIST");
+            Console.WriteLine();
+            PrintCentered("Select your destiny...", ConsoleColor.DarkGray);
+        });
     }
 
-    public char AskForLetter()
+    public void ShowGame(GameLogic logic, GuessResult? result)
     {
-        Console.Write("\n> Your Input: ");
-        return Console.ReadKey(intercept: true).KeyChar;
-    }
-
-    public void ShowEndGame(GameLogic logic)
-    {
-        if (logic.IsWin())
+        string art = Art.DrawScene(logic.CurrentMistakes);
+        
+        RenderLayout("HANGMAN: Save The Dinos", art, () =>
         {
-            int frameCounter = 0;
+            PrintCentered("Guess a letter");
+            Console.WriteLine();
+            PrintCentered(logic.GetMaskedWord(), ConsoleColor.Cyan);
+            Console.WriteLine();
+            PrintCentered($"Mistakes: {logic.CurrentMistakes}/{logic.MaxMistakes}");
             
-            while (!Console.KeyAvailable)
+            if (result.HasValue) PrintStatus(result.Value);
+        });
+    }
+
+    public void ShowVictoryAnimation()
+    {
+        int frame = 0;
+        while (!Console.KeyAvailable)
+        {
+            string art = Art.GetVictoryFrame(frame);
+            
+            RenderLayout("VICTORY!", art, () =>
             {
-                Reset();
-                PrintDivider("VICTORY!");
-                VerticalSpace(1);
-                
-                string frame = (frameCounter % 2 == 0) ? HangmanArt.WinFrame1 : HangmanArt.WinFrame2;
-                PrintMultilineCentered(frame, fixedHeight: 7);
+                PrintCentered("CONGRATULATIONS!", ConsoleColor.Green);
+                PrintCentered("THE DINOSAURS HAVE BEEN SAVED!");
+                Console.WriteLine("\n");
+                PrintCentered("Press any key to exit...", ConsoleColor.DarkGray);
+            });
+            
+            Thread.Sleep(500);
+            frame++;
+        }
+        Console.ReadKey(true);
+    }
 
-                VerticalSpace(2);
-                PrintLine("CONGRATULATIONS! YOU DIDN'T GET HANGED TODAY!", ConsoleColor.Green);
-                VerticalSpace(1);
-                
-                PrintDivider("");
+    public void ShowDefeat(string secretWord)
+    {
+        string art = Art.GetDefeatScene();
+        
+        RenderLayout("EXTINCTION", art, () =>
+        {
+            PrintCentered("THE DINOSAURS ARE TOASTS NOW...", ConsoleColor.Red);
+            PrintCentered($"The word was: {secretWord}");
+            Console.WriteLine("\n");
+            PrintCentered("Press any key to exit...", ConsoleColor.DarkGray);
+        });
+        Console.ReadKey(true);
+    }
 
-                VerticalSpace(2);
-                PrintLine("Press any key to exit...", ConsoleColor.Gray);
-                
-                Thread.Sleep(1000);
-                frameCounter++;
-            }
+    private void PrintStatus(GuessResult result)
+    {
+        Console.WriteLine();
+        var (msg, color) = result switch
+        {
+            GuessResult.Success => ("Good Job!", ConsoleColor.Green),
+            GuessResult.Miss => ("Missed!", ConsoleColor.Red),
+            GuessResult.Duplicate => ("Already used.", ConsoleColor.Yellow),
+            _ => ("", ConsoleColor.White)
+        };
+        PrintCentered(msg, color);
+    }
 
-            Console.ReadKey(intercept: true);
+    private void RenderLayout(string title, string art, Action bodyContent)
+    {
+        Console.Clear();
+        PrintDivider(title);
+        
+        if (!string.IsNullOrEmpty(art))
+        {
+            PrintArtBlock(art);
         }
         else
         {
-            Reset();
-            PrintDivider("GAME OVER");
-            VerticalSpace(2);
-            PrintMultilineCentered(HangmanArt.DrawHangman(logic.MaxMistakes), fixedHeight: 7);
-            VerticalSpace(1);
-            PrintLine("YOU DIED via CONSOLE APP", ConsoleColor.Red);
-            PrintLine($"The word was: {logic.SecretWord}");
-            PrintDivider("");
+            for(int i=0; i<12; i++) Console.WriteLine(); 
         }
         
-        VerticalSpace(2);
-        PrintLine("Press any key to exit...", ConsoleColor.Gray);
-        Console.ReadKey();
+        PrintDivider(""); 
+        Console.WriteLine();
+        
+        bodyContent(); 
+    }
+    
+    private void PrintArtBlock(string art)
+    {
+        var lines = art.Split('\n');
+        
+        int windowWidth = Math.Max(Console.WindowWidth, 60);
+        int padLeft = Math.Max(0, (windowWidth - 60) / 2);
+        string padding = new string(' ', padLeft);
+
+        foreach (var line in lines)
+        {
+            string cleanLine = line.Replace("\r", "").TrimEnd(); 
+            
+            if (!string.IsNullOrWhiteSpace(cleanLine))
+            {
+                Console.WriteLine(padding + cleanLine);
+            }
+            else
+            {
+                Console.WriteLine();
+            }
+        }
     }
 
-    private (string, ConsoleColor) GetStatusMessage(GuessResult result) => result switch
+    private void PrintDivider(string text)
     {
-        GuessResult.Success   => ("Good job!", ConsoleColor.Green),
-        GuessResult.Miss      => ("Missed!", ConsoleColor.Red),
-        GuessResult.Duplicate => ("Already tried...", ConsoleColor.Yellow),
-        _                     => ("", ConsoleColor.White)
-    };
+        int width = Math.Max(Console.WindowWidth - 1, 20);
+        int dashCount = Math.Max(0, (width - (text?.Length ?? 0) - 2) / 2);
+        string dashes = new string('=', dashCount);
+        
+        if (string.IsNullOrEmpty(text))
+        {
+            Console.WriteLine(new string('=', width));
+        }
+        else
+        {
+            Console.WriteLine($"{dashes} {text} {dashes}");
+        }
+    }
+
+    private void PrintCentered(string text, ConsoleColor color = ConsoleColor.White)
+    {
+        if (string.IsNullOrEmpty(text)) return;
+        
+        int width = Math.Max(Console.WindowWidth - 1, 20);
+        int pad = Math.Max(0, (width - text.Length) / 2);
+        
+        Console.ForegroundColor = color;
+        Console.WriteLine(new string(' ', pad) + text);
+        Console.ResetColor();
+    }
 }
