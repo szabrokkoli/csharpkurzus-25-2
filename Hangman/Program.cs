@@ -3,20 +3,12 @@
 Display display = new Display();
 InputHandler input = new InputHandler();
 
-// 1. Menu
-
 display.ShowDifficultyMenu();
 Difficulty diff = input.GetDifficulty();
 
-
-// 2. Setup
-
-string word = WordService.GetRandomWord(diff);
+string word = WordProvider.GetRandomWord(diff);
 GameLogic logic = new GameLogic(word);
 GuessResult? result = null;
-
-
-// 3. Game loop
 
 while (!logic.IsGameOver())
 {
@@ -26,12 +18,12 @@ while (!logic.IsGameOver())
     result = logic.Guess(guess);
 }
 
-
-// 4. End
+ScoreSerialization score = new ScoreSerialization(word, logic.CurrentMistakes, logic.IsWin());
+score.WriteScore();
 
 if (logic.IsWin())
 {
-    display.ShowVictoryAnimation();
+    display.ShowVictory();
 }
 else
 {

@@ -1,16 +1,19 @@
 ﻿namespace Hangman;
 
-public class Display // todo: clean it up
+public class Display
 {
     public void ShowDifficultyMenu()
     {
-        RenderLayout("DIFFICULTY", "", () =>
+        string art = Art.DrawScene(0);
+        
+        Rendering.RenderLayout("CHOOSE A DIFFICULTY!", art, () =>
         {
-            PrintCentered("1. ROOKIE");
-            PrintCentered("2. NERD");
-            PrintCentered("3. PALEONTOLOGIST");
-            Console.WriteLine();
-            PrintCentered("Select your destiny...", ConsoleColor.DarkGray);
+            var options = Enum.GetValues<Difficulty>();
+            
+            foreach (var option in options)
+            {
+                Rendering.PrintCentered($"{(int)option + 1}. {option}");
+            }
         });
     }
 
@@ -18,34 +21,35 @@ public class Display // todo: clean it up
     {
         string art = Art.DrawScene(logic.CurrentMistakes);
         
-        RenderLayout("HANGMAN: Save The Dinos", art, () =>
+        Rendering.RenderLayout("", art, () =>
         {
-            PrintCentered("Guess a letter");
+            Rendering.PrintCentered("Guess a letter\n");
+            Rendering.PrintCentered(GetMaskedWord(logic.Word, logic.GuessedLetters), ConsoleColor.Cyan);
             Console.WriteLine();
-            PrintCentered(logic.GetMaskedWord(), ConsoleColor.Cyan);
-            Console.WriteLine();
-            PrintCentered($"Mistakes: {logic.CurrentMistakes}/{logic.MaxMistakes}");
+            Rendering.PrintCentered($"Mistakes: {logic.CurrentMistakes}/{logic.MaxMistakes}");
             
             if (result.HasValue) PrintStatus(result.Value);
         });
     }
 
-    public void ShowVictoryAnimation()
+    public void ShowVictory()
     {
         int frame = 0;
+        int sleepTime = 1000;
         while (!Console.KeyAvailable)
         {
             string art = Art.GetVictoryFrame(frame);
             
-            RenderLayout("VICTORY!", art, () =>
+            Rendering.RenderLayout("", art, () =>
             {
-                PrintCentered("CONGRATULATIONS!", ConsoleColor.Green);
-                PrintCentered("THE DINOSAURS HAVE BEEN SAVED!");
-                Console.WriteLine("\n");
-                PrintCentered("Press any key to exit...", ConsoleColor.DarkGray);
+                Rendering.PrintCentered("CONGRATULATIONS!", ConsoleColor.Green);
+                Console.WriteLine();
+                Rendering.PrintCentered("THE DINOSAURS HAVE BEEN SAVED!");
+                Console.WriteLine();
+                Rendering.PrintCentered("Press any key to exit...", ConsoleColor.DarkGray);
             });
             
-            Thread.Sleep(500);
+            Thread.Sleep(sleepTime);
             frame++;
         }
         Console.ReadKey(true);
@@ -55,14 +59,20 @@ public class Display // todo: clean it up
     {
         string art = Art.GetDefeatScene();
         
-        RenderLayout("EXTINCTION", art, () =>
+        Rendering.RenderLayout("", art, () =>
         {
-            PrintCentered("THE DINOSAURS ARE TOASTS NOW...", ConsoleColor.Red);
-            PrintCentered($"The word was: {secretWord}");
-            Console.WriteLine("\n");
-            PrintCentered("Press any key to exit...", ConsoleColor.DarkGray);
+            Rendering.PrintCentered("THE DINOSAURS ARE TOASTS NOW...", ConsoleColor.Red);
+            Console.WriteLine();
+            Rendering.PrintCentered($"The word was: {secretWord}");
+            Console.WriteLine();
+            Rendering.PrintCentered("Press any key to exit...", ConsoleColor.DarkGray);
         });
         Console.ReadKey(true);
+    }
+    
+    public string GetMaskedWord(string word, IReadOnlySet<char> guessedLetters)
+    {
+        return string.Join(" ", word.Select(c => guessedLetters.Contains(c) ? c : '_'));
     }
 
     private void PrintStatus(GuessResult result)
@@ -75,77 +85,6 @@ public class Display // todo: clean it up
             GuessResult.Duplicate => ("Already used.", ConsoleColor.Yellow),
             _ => ("", ConsoleColor.White)
         };
-        PrintCentered(msg, color);
-    }
-
-    private void RenderLayout(string title, string art, Action bodyContent)
-    {
-        Console.Clear();
-        PrintDivider(title);
-        
-        if (!string.IsNullOrEmpty(art))
-        {
-            PrintArtBlock(art);
-        }
-        else
-        {
-            for(int i=0; i<12; i++) Console.WriteLine(); 
-        }
-        
-        PrintDivider(""); 
-        Console.WriteLine();
-        
-        bodyContent(); 
-    }
-    
-    private void PrintArtBlock(string art)
-    {
-        var lines = art.Split('\n');
-        
-        int windowWidth = Math.Max(Console.WindowWidth, 60);
-        int padLeft = Math.Max(0, (windowWidth - 60) / 2);
-        string padding = new string(' ', padLeft);
-
-        foreach (var line in lines)
-        {
-            string cleanLine = line.Replace("\r", "").TrimEnd(); 
-            
-            if (!string.IsNullOrWhiteSpace(cleanLine))
-            {
-                Console.WriteLine(padding + cleanLine);
-            }
-            else
-            {
-                Console.WriteLine();
-            }
-        }
-    }
-
-    private void PrintDivider(string text)
-    {
-        int width = Math.Max(Console.WindowWidth - 1, 20);
-        int dashCount = Math.Max(0, (width - (text?.Length ?? 0) - 2) / 2);
-        string dashes = new string('=', dashCount);
-        
-        if (string.IsNullOrEmpty(text))
-        {
-            Console.WriteLine(new string('=', width));
-        }
-        else
-        {
-            Console.WriteLine($"{dashes} {text} {dashes}");
-        }
-    }
-
-    private void PrintCentered(string text, ConsoleColor color = ConsoleColor.White)
-    {
-        if (string.IsNullOrEmpty(text)) return;
-        
-        int width = Math.Max(Console.WindowWidth - 1, 20);
-        int pad = Math.Max(0, (width - text.Length) / 2);
-        
-        Console.ForegroundColor = color;
-        Console.WriteLine(new string(' ', pad) + text);
-        Console.ResetColor();
+        Rendering.PrintCentered(msg, color);
     }
 }

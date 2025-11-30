@@ -1,10 +1,12 @@
 ﻿namespace Hangman;
 
-public class GameLogic (string word)
+public class GameLogic (string word, int maxMistakes = 10)
 {
-    public string Word { get; } = word.ToUpper();
     private readonly HashSet<char> _guessedLetters = [];
-    public int MaxMistakes => 10;
+    
+    public IReadOnlySet<char> GuessedLetters => _guessedLetters;
+    public string Word { get; } = word.ToUpper();
+    public int MaxMistakes { get; } = maxMistakes;
     public int CurrentMistakes { get; private set; }
 
     public GuessResult Guess(char letter)
@@ -16,11 +18,6 @@ public class GameLogic (string word)
         
         CurrentMistakes++;
         return GuessResult.Miss;
-    }
-    
-    public string GetMaskedWord()
-    {
-        return string.Join(" ", Word.Select(c => _guessedLetters.Contains(c) ? c : '_'));
     }
 
     public bool IsGameOver() 

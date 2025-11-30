@@ -4,21 +4,26 @@ public class InputHandler
 {
     public Difficulty GetDifficulty()
     {
+        var options = Enum.GetValues<Difficulty>();
         while (true)
         {
             char key = Console.ReadKey(intercept: true).KeyChar;
-            
-            switch (key)
+            if (int.TryParse(key.ToString(), out int val) && val > 0 && val <= options.Length)
             {
-                case '1': return Difficulty.Rookie;
-                case '2': return Difficulty.Nerd;
-                case '3': return Difficulty.Paleontologist;
+                return (Difficulty)(val - 1);
             }
         }
     }
 
-    public char AskForLetter() // TODO: Add validation for letters
+    public char AskForLetter()
     {
-        return Console.ReadKey(intercept: true).KeyChar;
+        while (true)
+        {
+            char key = Console.ReadKey(intercept: true).KeyChar;
+            if (char.IsLetter(key)) 
+            {
+                return key;
+            }
+        }
     }
 }
