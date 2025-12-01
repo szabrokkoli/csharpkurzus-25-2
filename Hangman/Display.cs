@@ -48,7 +48,7 @@ public class Display
         });
     }
 
-    public void ShowVictory()
+    public void ShowVictory(GameScore score, GameScore? highscore)
     {
         int frame = 0;
         int sleepTime = 1000;
@@ -62,6 +62,10 @@ public class Display
                 Console.WriteLine();
                 Rendering.PrintCentered("THE DINOSAURS HAVE BEEN SAVED!");
                 Console.WriteLine();
+                Rendering.PrintCentered($"Your score: {score.Score}");
+                if (highscore != null) Rendering.PrintCentered($"Highscore: {highscore.Score} by {highscore.PlayerName}");
+                Console.WriteLine();
+                Console.WriteLine();
                 Rendering.PrintCentered("Press any key...", ConsoleColor.DarkGray);
             });
             
@@ -71,7 +75,7 @@ public class Display
         Console.ReadKey(true);
     }
 
-    public void ShowDefeat(string secretWord)
+    public void ShowDefeat(string secretWord, GameScore score, GameScore? highscore)
     {
         string art = Art.GetDefeatScene();
         
@@ -80,6 +84,10 @@ public class Display
             Rendering.PrintCentered("THE DINOSAURS ARE TOAST NOW...", ConsoleColor.Red);
             Console.WriteLine();
             Rendering.PrintCentered($"The word was: {secretWord}");
+            Console.WriteLine();
+            Rendering.PrintCentered($"Your score: {score.Score}");
+            if (highscore != null) Rendering.PrintCentered($"Highscore: {highscore.Score} by {highscore.PlayerName}");
+            Console.WriteLine();
             Console.WriteLine();
             Rendering.PrintCentered("Press any key...", ConsoleColor.DarkGray);
         });

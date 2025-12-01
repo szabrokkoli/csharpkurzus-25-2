@@ -43,4 +43,14 @@ public static class ScoreSerialization
             throw new IOException("Could not access the score file");
         }
     }
+
+    public static GameScore? GetHighScore()
+    {
+        List<GameScore> scores = LoadScores();
+        
+        return scores
+            .Where(s => s.IsWin)
+            .OrderByDescending(s => s.Score)
+            .FirstOrDefault();
+    }
 }
