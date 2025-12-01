@@ -48,13 +48,13 @@ The application is structured into distinct layers to separate logic, data, and 
 * **`Display.cs`**: The high-level UI controller. Orchestrates screens (Menu, Game, Victory, Defeat).
 * **`Rendering.cs`**: The low-level graphics engine. Handles console buffer management, text centering, and layout borders.
 * **`Art.cs`**: A static repository containing the ASCII art assets for the gallows and dinosaurs.
-
-### Data & Persistence
-* **`ScoreSerialization.cs`**: Manages file I/O operations and JSON serialization and deserialization for player scores.
-* **`WordProvider.cs`**: Handles the loading, validation, and caching of word datasets from configuration files.
 * **`InputHandler.cs`**: Abstraction layer for user input validation (sanitizing key presses and strings).
 
-### Domain Models & Types
+### Data
+* **`ScoreSerialization.cs`**: Manages file I/O operations and JSON serialization and deserialization for player scores.
+* **`WordProvider.cs`**: Handles the loading, validation, and caching of word datasets from configuration files.
+
+### Domain Models
 * **`GameScore.cs`**: An immutable `record` type representing a completed game session.
 * **`Difficulty.cs`**: Enumeration defining game difficulty levels.
 * **`GuessResult.cs`**: Enumeration defining the outcome of a player's action (Success, Miss, Duplicate).
