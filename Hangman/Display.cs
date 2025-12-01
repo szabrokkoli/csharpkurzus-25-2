@@ -62,7 +62,7 @@ public class Display
                 Console.WriteLine();
                 Rendering.PrintCentered("THE DINOSAURS HAVE BEEN SAVED!");
                 Console.WriteLine();
-                Rendering.PrintCentered("Press any key to exit...", ConsoleColor.DarkGray);
+                Rendering.PrintCentered("Press any key...", ConsoleColor.DarkGray);
             });
             
             Thread.Sleep(sleepTime);
@@ -77,11 +77,11 @@ public class Display
         
         Rendering.RenderLayout("", art, () =>
         {
-            Rendering.PrintCentered("THE DINOSAURS ARE TOASTS NOW...", ConsoleColor.Red);
+            Rendering.PrintCentered("THE DINOSAURS ARE TOAST NOW...", ConsoleColor.Red);
             Console.WriteLine();
             Rendering.PrintCentered($"The word was: {secretWord}");
             Console.WriteLine();
-            Rendering.PrintCentered("Press any key to exit...", ConsoleColor.DarkGray);
+            Rendering.PrintCentered("Press any key...", ConsoleColor.DarkGray);
         });
         Console.ReadKey(true);
     }
@@ -102,5 +102,16 @@ public class Display
             _ => ("", ConsoleColor.White)
         };
         Rendering.PrintCentered(msg, color);
+    }
+    
+    public void ShowError(Exception exception)
+    {
+        Console.Clear();
+        Rendering.PrintCentered("ERROR!!!", ConsoleColor.Red);
+        Console.WriteLine();
+        Rendering.PrintCentered(exception.Message, ConsoleColor.DarkRed);
+        Console.WriteLine();
+        Rendering.PrintCentered("Press any key to return to exit...", ConsoleColor.DarkGray);
+        Console.ReadKey(true);
     }
 }

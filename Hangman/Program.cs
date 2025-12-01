@@ -3,16 +3,26 @@
 Display display = new Display();
 InputHandler input = new InputHandler();
 
+display.ShowNameMenu();
+string playerName = input.AskForName();
 
 do
 {
-    display.ShowNameMenu();
-    string playerName = input.AskForName();
-
     display.ShowDifficultyMenu();
     Difficulty diff = input.AskForDifficulty();
-
-    string word = WordProvider.GetRandomWord(diff);
+    
+    string word;
+    
+    try
+    {
+        word = WordProvider.GetRandomWord(diff);
+    }
+    catch (Exception ex)
+    {
+        display.ShowError(ex);
+        break;
+    }
+    
     GameLogic logic = new GameLogic(word);
     GuessResult? result = null;
 
@@ -25,7 +35,16 @@ do
     }
 
     GameScore score = new GameScore(playerName, word, logic.CurrentMistakes, logic.IsWin(), DateTimeOffset.Now);
-    ScoreSerialization.SaveScore(score);
+
+    try
+    {
+        ScoreSerialization.SaveScore(score);
+    }
+    catch (Exception ex)
+    {
+        display.ShowError(ex);
+        break;
+    }
 
     if (logic.IsWin())
     {

@@ -5,38 +5,42 @@ namespace Hangman;
 public static class WordProvider
 {
     private const string FileName = "words.json";
+    private static Dictionary<string, string[]>? _cachedWords;
     
     public static string GetRandomWord(Difficulty difficulty)
     {
         string[] words = LoadWords(difficulty);
-        if (words.Length == 0)
-        {
-            throw new Exception("No words found :(");
-        }
-        return words[System.Random.Shared.Next(words.Length)].ToUpper();
+        
+        return words[System.Random.Shared.Next(words.Length)].ToUpper();   
         
     }
 
     private static string[] LoadWords(Difficulty difficulty)
     {
-        if (!File.Exists(FileName)) return Array.Empty<string>();
-
-        try
+        if (_cachedWords == null)
         {
-            string jsonString = File.ReadAllText(FileName);
-            var wordData = JsonSerializer.Deserialize<Dictionary<string, string[]>>(jsonString);
-
-            string key = difficulty.ToString();
-
-            if (wordData != null && wordData.TryGetValue(key, out string[]? words))
+            if (!File.Exists(FileName))
             {
-                return words;
+                throw new FileNotFoundException($"'{FileName}' was not found.");
+            }
+
+            try
+            {
+                string jsonString = File.ReadAllText(FileName);
+                _cachedWords = JsonSerializer.Deserialize<Dictionary<string, string[]>>(jsonString)
+                               ?? new Dictionary<string, string[]>();
+            }
+            catch (JsonException ex)
+            {
+                throw new InvalidDataException("The JSON is malformed", ex);
             }
         }
-        catch (Exception ex)
+
+        if (_cachedWords.TryGetValue(difficulty.ToString(), out string[]? words) && words.Length > 0)
         {
-            Console.WriteLine($"Error reading words file: {ex.Message}");
+            return words;
         }
-        return Array.Empty<string>();
+
+        throw new KeyNotFoundException($"Difficulty '{difficulty.ToString()}' is not defined in the JSON file.");
     }
 }

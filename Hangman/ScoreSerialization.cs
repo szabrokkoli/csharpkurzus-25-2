@@ -16,16 +16,10 @@ public static class ScoreSerialization
     {
         List<GameScore> scores = LoadScores();
         scores.Add(score);
-
-        try
-        {
-            string scoresJson = JsonSerializer.Serialize(scores, Options);
-            File.WriteAllText(FileName, scoresJson);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"[Error] Failed to save score: {ex.Message}");
-        }
+        
+        string scoresJson = JsonSerializer.Serialize(scores, Options);
+        
+        File.WriteAllText(FileName, scoresJson);
     }
 
     public static List<GameScore> LoadScores()
@@ -40,10 +34,13 @@ public static class ScoreSerialization
 
             return JsonSerializer.Deserialize<List<GameScore>>(scoresJson, Options) ?? new List<GameScore>();
         }
-        catch
+        catch (JsonException)
         {
-            Console.WriteLine("[Error] Failed to read scores. Returning empty list.");
-            return new List<GameScore>();
+            throw new InvalidDataException("Scores file is corrupt");
+        }
+        catch (IOException)
+        {
+            throw new IOException("Could not access the score file");
         }
     }
 }
