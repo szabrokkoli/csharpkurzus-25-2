@@ -416,3 +416,22 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+
+#Build eredmények (Szemét)
+
+[Bb]in/
+[Oo]bj/
+
+# IDE beállítások (Személyes ügy)
+
+.idea/
+.vs/
+*.user
+*.suo
+*.userprefs
+
+# Egyéb generated fájlok
+
+*.log
+*.tmp

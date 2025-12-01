@@ -1,4 +1,4 @@
-﻿namespace Hangman;
+﻿namespace Hangman.UI;
 
 public static class Rendering
 {

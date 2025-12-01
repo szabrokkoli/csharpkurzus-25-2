@@ -1,4 +1,8 @@
 ﻿using Hangman;
+using Hangman.Core;
+using Hangman.Data;
+using Hangman.Models;
+using Hangman.UI;
 
 Display display = new Display();
 InputHandler input = new InputHandler();

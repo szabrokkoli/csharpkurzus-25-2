@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
+using Hangman.Models;
 
-namespace Hangman;
+namespace Hangman.Data;
 
 public static class ScoreSerialization
 {

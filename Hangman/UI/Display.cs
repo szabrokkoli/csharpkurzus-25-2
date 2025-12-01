@@ -1,4 +1,7 @@
-﻿namespace Hangman;
+﻿using Hangman.Core;
+using Hangman.Models;
+
+namespace Hangman.UI;
 
 public class Display
 {

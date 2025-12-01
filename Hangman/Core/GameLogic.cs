@@ -1,4 +1,6 @@
-﻿namespace Hangman;
+﻿using Hangman.Models;
+
+namespace Hangman.Core;
 
 public class GameLogic (string word, int maxMistakes = 10)
 {

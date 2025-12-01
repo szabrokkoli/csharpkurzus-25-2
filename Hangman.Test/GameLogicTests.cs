@@ -1,4 +1,7 @@
-﻿namespace Hangman.Test;
+﻿using Hangman.Core;
+using Hangman.Models;
+
+namespace Hangman.Test;
 using Hangman;
 
 [TestFixture]

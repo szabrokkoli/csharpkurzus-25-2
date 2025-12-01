@@ -1,4 +1,6 @@
-﻿namespace Hangman;
+﻿using Hangman.Models;
+
+namespace Hangman.UI;
 
 public class InputHandler
 {
