@@ -25,6 +25,14 @@ public class Display
         {});
     }
 
+    public void ShowPlayAgainMenu()
+    {
+        string art = Art.DrawScene(0);
+        
+        Rendering.RenderLayout("WANT TO PLAY AGAIN? (Y/N)", art, () =>
+            {});
+    }
+
     public void ShowGame(GameLogic logic, GuessResult? result)
     {
         string art = Art.DrawScene(logic.CurrentMistakes);

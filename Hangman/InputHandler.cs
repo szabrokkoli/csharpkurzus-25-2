@@ -2,7 +2,7 @@
 
 public class InputHandler
 {
-    public Difficulty GetDifficulty()
+    public Difficulty AskForDifficulty()
     {
         var options = Enum.GetValues<Difficulty>();
         while (true)
@@ -42,6 +42,17 @@ public class InputHandler
             {
                 return input.Trim();
             }
+        }
+    }
+    
+    public bool AskPlayAgain()
+    {
+        while (true)
+        {
+            char key = Console.ReadKey(intercept: true).KeyChar;
+        
+            if (char.ToUpper(key) == 'Y') return true;
+            if (char.ToUpper(key) == 'N') return false;
         }
     }
 }
