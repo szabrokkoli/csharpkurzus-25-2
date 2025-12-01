@@ -16,6 +16,14 @@ public class Display
             }
         });
     }
+    
+    public void ShowNameMenu()
+    {
+        string art = Art.DrawScene(0);
+        
+        Rendering.RenderLayout("TELL ME YOUR NAME!", art, () =>
+        {});
+    }
 
     public void ShowGame(GameLogic logic, GuessResult? result)
     {

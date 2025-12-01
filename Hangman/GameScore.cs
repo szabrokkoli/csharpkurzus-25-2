@@ -1,9 +1,9 @@
 ﻿namespace Hangman;
 
 public record GameScore(
-    //string PlayerName,  //todo: add player name
+    string PlayerName,
     string Word, 
     int Mistakes, 
     bool IsWin, 
-    DateTime Date
+    DateTimeOffset Date
 );

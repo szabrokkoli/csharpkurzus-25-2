@@ -2,66 +2,48 @@
 
 namespace Hangman;
 
-public class ScoreSerialization(string word, int mistakes, bool isWin)
+public static class ScoreSerialization
 {
-    private readonly string _scoresFilePath = "scores.json";
-    
-    private readonly JsonSerializerOptions _options = new() 
-    { 
+    private const string FileName = "scores.json";
+
+    private static readonly JsonSerializerOptions Options = new()
+    {
         WriteIndented = true,
         PropertyNameCaseInsensitive = true
     };
 
-    public void WriteScore()
+    public static void SaveScore(GameScore score)
     {
-        GameScore score = CreateGameScore();   
-        try
-        {
-            List<GameScore> scores = ReadAllScores();
-            scores.Add(score);
-
-            string jsonString = JsonSerializer.Serialize(scores, _options);
-            File.WriteAllText(_scoresFilePath, jsonString);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"[IO Error] Failed to save score: {ex.Message}");
-        }
-    }
-
-    public List<GameScore> ReadAllScores()
-    {
-        if (!File.Exists(_scoresFilePath))
-        {
-            return new List<GameScore>();
-        }
+        List<GameScore> scores = LoadScores();
+        scores.Add(score);
 
         try
         {
-            string jsonContent = File.ReadAllText(_scoresFilePath);
-            
-            if (string.IsNullOrWhiteSpace(jsonContent))
-            {
-                return new List<GameScore>();
-            }
-
-            return JsonSerializer.Deserialize<List<GameScore>>(jsonContent, _options) 
-                   ?? new List<GameScore>();
-        }
-        catch (JsonException)
-        {
-            Console.WriteLine("Data corruption detected. Returning empty log.");
-            return new List<GameScore>();
+            string scoresJson = JsonSerializer.Serialize(scores, Options);
+            File.WriteAllText(FileName, scoresJson);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[IO Error] Failed to read scores: {ex.Message}");
-            return new List<GameScore>();
+            Console.WriteLine($"[Error] Failed to save score: {ex.Message}");
         }
     }
 
-    public GameScore CreateGameScore()
+    public static List<GameScore> LoadScores()
     {
-        return new GameScore(word, mistakes, isWin, DateTime.Now);
+        if (!File.Exists(FileName)) return new List<GameScore>();
+
+        try
+        {
+            string scoresJson = File.ReadAllText(FileName);
+
+            if (string.IsNullOrWhiteSpace(scoresJson)) return new List<GameScore>();
+
+            return JsonSerializer.Deserialize<List<GameScore>>(scoresJson, Options) ?? new List<GameScore>();
+        }
+        catch
+        {
+            Console.WriteLine("[Error] Failed to read scores. Returning empty list.");
+            return new List<GameScore>();
+        }
     }
 }

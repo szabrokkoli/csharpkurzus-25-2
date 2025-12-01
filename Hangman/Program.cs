@@ -3,6 +3,9 @@
 Display display = new Display();
 InputHandler input = new InputHandler();
 
+display.ShowNameMenu();
+string playerName = input.AskForName();
+
 display.ShowDifficultyMenu();
 Difficulty diff = input.GetDifficulty();
 
@@ -18,8 +21,8 @@ while (!logic.IsGameOver())
     result = logic.Guess(guess);
 }
 
-ScoreSerialization score = new ScoreSerialization(word, logic.CurrentMistakes, logic.IsWin());
-score.WriteScore();
+GameScore score = new GameScore(playerName, word, logic.CurrentMistakes, logic.IsWin(), DateTimeOffset.Now);
+ScoreSerialization.SaveScore(score);
 
 if (logic.IsWin())
 {

@@ -1,8 +1,16 @@
 [
   {
+    "PlayerName": null,
     "Word": "DIMETRODON",
     "Mistakes": 4,
     "IsWin": true,
     "Date": "2025-11-30T18:49:54.5486052+01:00"
+  },
+  {
+    "PlayerName": "Szabina",
+    "Word": "MOSASAURUS",
+    "Mistakes": 5,
+    "IsWin": true,
+    "Date": "2025-12-01T18:34:27.4931844+01:00"
   }
 ]
