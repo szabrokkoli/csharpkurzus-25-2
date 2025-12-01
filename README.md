@@ -62,9 +62,9 @@ The application is structured into distinct layers to separate logic, data, and 
 ## 📊 Scoring System
 Scores are automatically saved to scores.json upon game completion. It's calculated based on difficulty and efficiency. 
 
-
-\text{Score} = (\text{Difficulty} + 1) \times (10 - \text{Mistakes})
-
+```bash
+Score = ({Difficulty} + 1) * (10 - {Mistakes})
+```
 
 *Note: Losing gives a score of 0. Mediocrity is not rewarded.*
 
