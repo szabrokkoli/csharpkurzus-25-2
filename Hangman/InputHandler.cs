@@ -8,9 +8,14 @@ public class InputHandler
         while (true)
         {
             char key = Console.ReadKey(intercept: true).KeyChar;
-            if (int.TryParse(key.ToString(), out int val) && val > 0 && val <= options.Length)
+            
+            if (char.IsDigit(key)
             {
-                return (Difficulty)(val - 1);
+                int value = key - '0';
+                
+                if(value > 0 && value <= options.Length){
+                    return (Difficulty)(val - 1);
+                }
             }
         }
     }
