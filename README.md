@@ -8,14 +8,11 @@
 * **Zsígó Zsombor** - *AYEC8P*
 
 ## 🦕 Overview
-This is not your grandfather's morbid Hangman. In this C# Console Application, we are not executing criminals; we are attempting to prevent the Cretaceous-Paleogene extinction event. Every wrong guess brings an asteroid closer to a bewildered ASCII dinosaur.
-
-**No pressure.**
+This is not your usual Hangman. In this C# Console Application, we are not executing criminals; we are attempting to prevent the Cretaceous-Paleogene extinction event. Every wrong guess brings an asteroid closer to a bewildered ASCII dinosaur.
 
 ## 🛠️ Technical Features
-This project was constructed to meet rigorous software engineering standards, including but not limited to:
 
-* **Game Loop:** Interactive console interface with robust input validation.
+* **Game Loop:** Interactive console interface.
 * **Error Handling:** Comprehensive `try-catch` blocks to manage I/O operations and runtime exceptions gracefully.
 * **Persistent Storage:** Word banks and player high scores are serialized and stored via JSON (`System.Text.Json`).
 * **Data Integrity:** Usage of C# `record` types for thread-safe, immutable score tracking.
