@@ -15,8 +15,8 @@ public class InputHandler
             {
                 int value = key - '0';
                 
-                if(value > 0 && value <= options.Length){
-                    return (Difficulty)(value - 1);
+                if(options.Contains((Difficulty)(value-1))){
+                    return (Difficulty)(value-1);
                 }
             }
         }
