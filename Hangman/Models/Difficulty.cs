@@ -2,7 +2,7 @@
 
 public enum Difficulty
 {
-    Rookie, 
-    Nerd, 
-    Paleontologist
+    Rookie = 1, 
+    Nerd = 2, 
+    Paleontologist = 3
 }

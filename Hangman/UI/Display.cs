@@ -11,11 +11,11 @@ public class Display
         
         Rendering.RenderLayout("CHOOSE A DIFFICULTY!", art, () =>
         {
-            var options = Enum.GetValues<Difficulty>();
+            var options = Enum.GetValues(typeof(Difficulty)).Cast<Difficulty>().ToDictionary(d => (int)d, d => d.ToString());
             
-            foreach (var option in options)
+            foreach (var option in options.Keys)
             {
-                Rendering.PrintCentered($"{(int)option + 1}. {option}");
+                Rendering.PrintCentered($"{(int)option}. {options[option]}");
             }
         });
     }

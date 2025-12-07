@@ -8,7 +8,7 @@ public static class WordProvider
     private const string FileName = "words.json";
     private static Dictionary<string, string[]>? _cachedWords;
     
-    public static string GetRandomWord(Difficulty difficulty)
+    public static string GetRandomWord(string difficulty)
     {
         string[] words = LoadWords(difficulty);
         
@@ -16,7 +16,7 @@ public static class WordProvider
         
     }
 
-    private static string[] LoadWords(Difficulty difficulty)
+    private static string[] LoadWords(string difficulty)
     {
         if (_cachedWords == null)
         {
@@ -37,11 +37,11 @@ public static class WordProvider
             }
         }
 
-        if (_cachedWords.TryGetValue(difficulty.ToString(), out string[]? words) && words.Length > 0)
+        if (_cachedWords.TryGetValue(difficulty, out string[]? words) && words.Length > 0)
         {
             return words;
         }
 
-        throw new KeyNotFoundException($"Difficulty '{difficulty.ToString()}' is not defined in the JSON file.");
+        throw new KeyNotFoundException($"Difficulty '{difficulty}' is not defined in the JSON file.");
     }
 }

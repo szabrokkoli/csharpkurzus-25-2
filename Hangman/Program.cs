@@ -13,13 +13,14 @@ string playerName = input.AskForName();
 do
 {
     display.ShowDifficultyMenu();
-    Difficulty difficulty = input.AskForDifficulty();
+    string difficulty = input.AskForDifficulty();
+    Difficulty score_difficulty = Enum.Parse<Difficulty>(difficulty);
     
     string word;
     
     try
     {
-        word = WordProvider.GetRandomWord(difficulty);
+        word = WordProvider.GetRandomWord((string)difficulty);
     }
     catch (Exception ex)
     {
@@ -38,7 +39,7 @@ do
         result = logic.Guess(guess);
     }
 
-    GameScore scoreRecord = new GameScore(playerName, difficulty, word, logic.CurrentMistakes, logic.IsWin(), DateTimeOffset.Now);
+    GameScore scoreRecord = new GameScore(playerName, score_difficulty, word, logic.CurrentMistakes, logic.IsWin(), DateTimeOffset.Now);
 
     try
     {

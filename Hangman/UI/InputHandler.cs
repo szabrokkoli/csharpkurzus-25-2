@@ -4,9 +4,9 @@ namespace Hangman.UI;
 
 public class InputHandler
 {
-    public Difficulty AskForDifficulty()
+    public string AskForDifficulty()
     {
-        var options = Enum.GetValues<Difficulty>();
+        var options = Enum.GetValues(typeof(Difficulty)).Cast<Difficulty>().ToDictionary(d => (int)d, d => d.ToString());
         while (true)
         {
             char key = Console.ReadKey(intercept: true).KeyChar;
@@ -15,8 +15,8 @@ public class InputHandler
             {
                 int value = key - '0';
                 
-                if(options.Contains((Difficulty)(value-1))){
-                    return (Difficulty)(value-1);
+                if(options.ContainsKey(value)){
+                    return options[value];
                 }
             }
         }
