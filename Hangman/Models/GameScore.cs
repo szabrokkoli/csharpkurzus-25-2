@@ -8,5 +8,5 @@ public record GameScore(
     bool IsWin, 
     DateTimeOffset Date
 ){
-    public int Score => IsWin ? ((int)Difficulty + 1) * (10 - Mistakes) : 0;
+    public int Score => IsWin ? ((int)Difficulty) * (10 - Mistakes) : 0;
 }
